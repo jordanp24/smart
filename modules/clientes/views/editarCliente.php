@@ -92,7 +92,7 @@ include '../../include/views/head.php';
                                                             <td><?php echo $row["id"]; ?></td>
                                                             <td><input name="cel" id="cel" type="text" class="validate" value="<?php echo $row["descripcion"]; ?>"></td>
                                                             <td>
-                                                                <button id="<?php echo $row['id'] ?>" onclick="editarDireccion(this.id)" class="btn white tooltipped" data-position="top" data-tooltip="Editar Cliente"><i class="material-icons center indigo-text text-darken-3">edit</i></button>
+                                                                <button id="<?php echo $row['id'] ?>" type="button" onclick="editarDireccion(this.id)" class="btn white tooltipped" data-position="top" data-tooltip="Editar dirección"><i class="material-icons center indigo-text text-darken-3">edit</i></button>
                                                                 <button id="<?php echo $row['id'] ?>" type="button" onclick="showModalcliente(this.id)" class="btn white tooltipped" data-position="top" data-tooltip="Ver teléfonos"><i class="material-icons center indigo-text text-darken-3">call</i></button>
                                                             </td>
                                                         </tr>

@@ -71,6 +71,11 @@ include '../../include/views/head.php';
                                             $querydata = "SELECT * FROM direccion where cliente = " . $row["id"];
                                             $resultquery = $mysqli->query($querydata);
                                             ?>
+                                            <div class="row center">
+                                                <div class="input-field center-align">
+                                                    <a class="btn cyan darken-3 tooltipped" data-position="top" data-tooltip="Agregar cliente" href="agregarCliente.php"><i class="material-icons left white-text">add</i> Agregar dirección</a>
+                                                </div>
+                                            </div>
 
                                             <table id="tablaDirecciones" class="striped responsive-table display nowrap highlight centered z-depth-1" cellspacing="0" width="100%">
                                                 <thead class="white-text indigo darken-4">
@@ -259,19 +264,19 @@ include '../../include/views/head.php';
         $(document).ready(function() {
             $('#enviar').click(function() {
                 let cliente = [];
-                
-                    let id = document.getElementById("idc").value;
-                    let nom = document.getElementById("nom").value;
-                    let ape = document.getElementById("ape").value;
-                    let ser = document.getElementById("ser").value;
-                    let tip = document.getElementById("tip").value;
-                    cliente = {
-                        id,
-                        nom,
-                        ape,
-                        ser,
-                        tip
-                    };
+
+                let id = document.getElementById("idc").value;
+                let nom = document.getElementById("nom").value;
+                let ape = document.getElementById("ape").value;
+                let ser = document.getElementById("ser").value;
+                let tip = document.getElementById("tip").value;
+                cliente = {
+                    id,
+                    nom,
+                    ape,
+                    ser,
+                    tip
+                };
 
                 if (!cliente?.nom?.length) {
                     alert("El nombre está vacío: ");
@@ -287,7 +292,7 @@ include '../../include/views/head.php';
                     }).done(function(result) {
                         if (result != 1) {
                             alert(result);
-                        }else if (result == 1) {
+                        } else if (result == 1) {
                             alert('El cliente fue actualizado correctamente');
                             location.href = "verClientes.php";
                         }

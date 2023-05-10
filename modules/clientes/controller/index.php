@@ -5,35 +5,17 @@ $op = $_GET['op'];
 switch ($op) {
     case 1:
         if (!empty($_POST)) {
-            $nom = mysqli_real_escape_string($mysqli, $_POST['nom']);
-            $ape = mysqli_real_escape_string($mysqli, $_POST['ape']);
-            $dpi = mysqli_real_escape_string($mysqli, $_POST['dpi']);
-            $dir = mysqli_real_escape_string($mysqli, $_POST['dir']);
-            $cel = mysqli_real_escape_string($mysqli, $_POST['cel']);
-            $em = mysqli_real_escape_string($mysqli, $_POST['em']);
+            $cliente = json_decode($_POST['cliente'], true);
 
-            $typed = $_FILES['fodpi']['type'];
-            $aleatoriod = rand(10000, 99000);
-            $nombrefotod = $_FILES['fodpi']['name'];
-            $tmpd = $_FILES['fodpi']['tmp_name'];
-            $rutad = "../fotos/" . $aleatoriod . $nombrefotod;
+            $nom = mysqli_real_escape_string($mysqli, $cliente['nom']);
+            $ape = mysqli_real_escape_string($mysqli, $cliente['ape']);
+            $ser = mysqli_real_escape_string($mysqli, $cliente['ser']);
+            $tip = mysqli_real_escape_string($mysqli, $cliente['tip']);
 
-            $typer = $_FILES['fore']['type'];
-            $aleatorior = rand(10000, 99000);
-            $nombrefotor = $_FILES['fore']['name'];
-            $tmpr = $_FILES['fore']['tmp_name'];
-            $rutar = "../fotos/" . $aleatorior . $nombrefotor;
-
-
-            $query = "CALL add_cliente('$nom', '$ape', '$dpi', '$dir', '$cel', '$em', '$rutar', '$rutad', @msg)";
             $mysqli->query("start transaction");
+            $query = "CALL add_cliente('$nom', '$ape', '$ser', '$tip', @msg)";
             if (!$mysqli->query($query)) {
                 echo "Error al guarda el cliente: " . $mysqli->error;
-            } else {
-                move_uploaded_file($tmpd, $rutad);
-                move_uploaded_file($tmpr, $rutar);
-                echo "El cliente fue creado correctamente";
-                header("Location: ../views/verClientes.php");
             }
             $mysqli->query("commit");
         }
@@ -41,83 +23,17 @@ switch ($op) {
 
     case 2:
         if (!empty($_POST)) {
-            $idc = mysqli_real_escape_string($mysqli, $_POST['idc']);
-            $nom = mysqli_real_escape_string($mysqli, $_POST['nom']);
-            $ape = mysqli_real_escape_string($mysqli, $_POST['ape']);
-            $dpi = mysqli_real_escape_string($mysqli, $_POST['dpi']);
-            $dir = mysqli_real_escape_string($mysqli, $_POST['dir']);
-            $cel = mysqli_real_escape_string($mysqli, $_POST['cel']);
-            $em = mysqli_real_escape_string($mysqli, $_POST['em']);
-            $tmpr = $_FILES['fore']['tmp_name'];
-            $tmpd = $_FILES['fodpi']['tmp_name'];
+            $cliente = json_decode($_POST['cliente'], true);
 
-            if (is_uploaded_file($tmpr) && is_uploaded_file($tmpd)) {
-                $typer = $_FILES['fore']['type'];
-                $aleatorior = rand(10000, 99000);
-                $nombrefotor = $_FILES['fore']['name'];
-                $rutar = "../fotos/" . $aleatorior . $nombrefotor;
-                $resultr = $mysqli->query("select fotorecibo from clientes where idcliente=$idc");
-                $urlr = $rowr = mysqli_fetch_array($resultr);
+            $id = mysqli_real_escape_string($mysqli, $cliente['id']);
+            $nom = mysqli_real_escape_string($mysqli, $cliente['nom']);
+            $ape = mysqli_real_escape_string($mysqli, $cliente['ape']);
+            $ser = mysqli_real_escape_string($mysqli, $cliente['ser']);
+            $tip = mysqli_real_escape_string($mysqli, $cliente['tip']);
 
-                $typed = $_FILES['fodpi']['type'];
-                $aleatoriod = rand(10000, 99000);
-                $nombrefotod = $_FILES['fodpi']['name'];
-                $rutad = "../fotos/" . $aleatoriod . $nombrefotod;
-                $resultd = $mysqli->query("select fotodpi from clientes where idcliente=$idc");
-                $urld = $rowd = mysqli_fetch_array($resultd);
-            } else if (!is_uploaded_file($tmpr) && is_uploaded_file($tmpd)) {
-                $resultr = $mysqli->query("select fotorecibo from clientes where idcliente=$idc");
-                $urlr = $rowr = mysqli_fetch_array($resultr);
-                $rutar = $urlr['fotorecibo'];
-
-                $typed = $_FILES['fodpi']['type'];
-                $aleatoriod = rand(10000, 99000);
-                $nombrefotod = $_FILES['fodpi']['name'];
-                $rutad = "../fotos/" . $aleatoriod . $nombrefotod;
-                $resultd = $mysqli->query("select fotodpi from clientes where idcliente=$idc");
-                $urld = $rowd = mysqli_fetch_array($resultd);
-            } else if (is_uploaded_file($tmpr) && !is_uploaded_file($tmpd)) {
-                $typer = $_FILES['fore']['type'];
-                $aleatorior = rand(10000, 99000);
-                $nombrefotor = $_FILES['fore']['name'];
-                $rutar = "../fotos/" . $aleatorior . $nombrefotor;
-                $resultr = $mysqli->query("select fotorecibo from clientes where idcliente=$idc");
-                $urlr = $rowr = mysqli_fetch_array($resultr);
-
-                $resultd = $mysqli->query("select fotodpi from clientes where idcliente=$idc");
-                $urld = $rowd = mysqli_fetch_array($resultd);
-                $rutad = $urld['fotodpi'];
-            }
-
-            $query = "CALL up_clientes($idc, '$nom', '$ape', '$dpi', '$dir', '$cel', '$em', '$rutar', '$rutad', @msg)";
-            $mysqli->query("start transaction");
+            $query = "CALL up_cliente($id, '$nom', '$ape', '$ser', '$tip', @msg)";
             if (!$mysqli->query($query)) {
-                $mysqli->query("rollback");
-                echo "Error al guarda el cliente: " . $mysqli->error;
-            } else {
-                $result = $mysqli->query("SELECT @msg as m");
-                $salida = $result->fetch_assoc();
-                $msg = $salida['m'];
-
-                if ($msg == 1) {
-                    if (!is_uploaded_file($tmpr) && is_uploaded_file($tmpd)) {
-                        unlink($urld['fotodpi']);
-                        move_uploaded_file($tmpd, $rutad);
-                    }
-                    if (is_uploaded_file($tmpr) && !is_uploaded_file($tmpd)) {
-                        move_uploaded_file($tmpr, $rutar);
-                        unlink($urlr['fotorecibo']);
-                    } else if (is_uploaded_file($tmpr) && is_uploaded_file($tmpd)) {
-                        unlink($urld['fotodpi']);
-                        move_uploaded_file($tmpd, $rutad);
-                        move_uploaded_file($tmpr, $rutar);
-                        unlink($urlr['fotorecibo']);
-                    }
-                    echo "El cliente fue creado correctamente";
-                    header("Location: ../views/verClientes.php");
-                } else if ($msg == 0) {
-                    echo "Error al guarda el cliente: Ya existe un cliente con DPI: $nit";
-                }
+                echo "Error al actualizar el cliente: " . $mysqli->error;
             }
             $mysqli->query("commit");
         }
@@ -156,25 +72,25 @@ switch ($op) {
         if ($result->num_rows) {
             $row = $result->fetch_assoc();
             $rawdata = array('nombre' => $row['nombre'], 'dpi' => $dpi, 'id' => $row['id']);
-        } 
-        
+        }
+
         echo json_encode($rawdata);
         $result->close();
         $mysqli->query("commit");
         // echo "cliente: $dpi";
         break;
     case 'telefonos';
-    $rawdata = array();
-    $id = $_GET["id"];
-    $mysqli->query("start transaction");
-    $query = "SELECT id, numero from telefono WHERE direccion = $id;";
-    $result = $mysqli->query($query);
-    while($row = $result->fetch_assoc()) {
-        $rawdata[] = $row;
-    }
-    
-    echo json_encode($rawdata);
-    $result->close();
-    $mysqli->query("commit");
-    break;
+        $rawdata = array();
+        $id = $_GET["id"];
+        $mysqli->query("start transaction");
+        $query = "SELECT id, numero from telefono WHERE direccion = $id;";
+        $result = $mysqli->query($query);
+        while ($row = $result->fetch_assoc()) {
+            $rawdata[] = $row;
+        }
+
+        echo json_encode($rawdata);
+        $result->close();
+        $mysqli->query("commit");
+        break;
 }

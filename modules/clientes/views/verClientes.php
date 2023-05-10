@@ -60,7 +60,6 @@ include '../../include/views/head.php';
                                     <td><?php echo $row["nombres"]; ?></td>
                                     <td><?php echo $row["apellidos"]; ?></td>
                                     <td><?php echo $row["servicio"]; ?></td>
-                                    <td><?php echo $row["direccion"]; ?></td>
                                     <td><?php echo $row["tiposervicio"]; ?></td>
                                     <td><?php echo $row["morosidad"] == 1 ? 'Moroso' : "Al día"; ?></td>
                                     <td>

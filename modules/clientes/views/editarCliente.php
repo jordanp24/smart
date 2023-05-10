@@ -62,7 +62,7 @@ include '../../include/views/head.php';
                                                     <label for="tip" class="black-text">Tipo servicio:</label>
                                                 </div>
                                                 <div class="input-field col s4">
-                                                    <input name="mor" id="mor" type="email" class="validate" value="<?php echo $row["morosidad"] == 1 ? 'Moroso' : "Al día"; ?>">
+                                                    <input name="mor" id="mor" type="text" class="validate" value="<?php echo $row["morosidad"] == 1 ? 'Moroso' : "Al día"; ?>">
                                                     <label for="mor" class="black-text">Morosidad:</label>
                                                 </div>
                                             </div>
@@ -252,10 +252,56 @@ include '../../include/views/head.php';
     <script type="text/javascript" src="../../../js/formulario.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script type="text/javascript" src="../../../js/animacion.js"></script>
-
+    <!-- <script type="text/javascript" src="../js/editar.js?v=1.1"></script> -->
 
 
     <script>
+        $(document).ready(function() {
+            $('#enviar').click(function() {
+
+                var id = document.getElementById("idc").value;
+                var nom = document.getElementById("nom").value;
+                var ape = document.getElementById("ape").value;
+                var ser = document.getElementById("nit").value;
+                var tip = document.getElementById("dir").value;
+                var mor = document.getElementById("cel").value;
+
+                if (!nom.length) {
+                    alert("El nombre está vacío");
+                } else if (!ape.length) {
+                    alert("El apellido está vacío");
+                } else if (!dir.length) {
+                    alert("La dirección está vacía");
+                } else {
+                    var cliente = {
+                        id,
+                        nom,
+                        ape,
+                        ser,
+                        tip,
+                        mor
+                    };
+
+                    $.ajax({
+                        type: "POST",
+                        url: "../controller/?op=2",
+                        data: {
+                            cliente: JSON.stringify(cliente)
+                        },
+                    }).done(function(result) {
+                        if (result != 1) {
+                            alert(result);
+                        }
+                        // else if (result == 1) {
+                        //     alert('El cliente fue actualizado correctamente');
+                        //     // location.href = "verClientes.php";
+                        // }
+                    }).fail(function(error) {
+                        alert("Error Petición POST: " + error);
+                    });
+                }
+            });
+        });
         $(document).ready(function() {
             // $('form').submit(function(ev) {
             //     $(this).unbind('submit').submit()

@@ -105,7 +105,7 @@ include '../../include/views/head.php';
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <!--Fin-Google-Charts-CDN-->
     <script type="text/javascript" src="../../../js/animacion.js"></script>
-    <!-- <script type="text/javascript" src="../js/agregar.js?v=1.0"></script> -->
+    <script type="text/javascript" src="../js/agregar.js?v=1.0"></script>
 
     <script>
         $(document).ready(function() {

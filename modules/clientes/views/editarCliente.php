@@ -53,17 +53,17 @@ include '../../include/views/head.php';
                                             </div>
                                             <div class="row">
                                                 <div class="input-field col s4">
-                                                    <input name="dpi" id="dpi" type="text" class="validate" value="<?php echo $row["servicio"]; ?>">
-                                                    <label for="dpi" class="black-text">Servicio:</label>
+                                                    <input name="ser" id="ser" type="text" class="validate" value="<?php echo $row["servicio"]; ?>">
+                                                    <label for="ser" class="black-text">Servicio:</label>
                                                 </div>
 
                                                 <div class="input-field col s4">
-                                                    <input name="cel" id="cel" type="text" class="validate" value="<?php echo $row["tiposervicio"]; ?>">
-                                                    <label for="cel" class="black-text">Tipo servicio:</label>
+                                                    <input name="tip" id="tip" type="text" class="validate" value="<?php echo $row["tiposervicio"]; ?>">
+                                                    <label for="tip" class="black-text">Tipo servicio:</label>
                                                 </div>
                                                 <div class="input-field col s4">
-                                                    <input name="em" id="em" type="email" class="validate" value="<?php echo $row["morosidad"] == 1 ? 'Moroso' : "Al día"; ?>">
-                                                    <label for="em" class="black-text">Morosidad:</label>
+                                                    <input name="mor" id="mor" type="email" class="validate" value="<?php echo $row["morosidad"] == 1 ? 'Moroso' : "Al día"; ?>">
+                                                    <label for="mor" class="black-text">Morosidad:</label>
                                                 </div>
                                             </div>
 

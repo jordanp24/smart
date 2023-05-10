@@ -16,6 +16,16 @@ switch ($op) {
             $query = "CALL add_cliente('$nom', '$ape', '$ser', '$tip', @msg)";
             if (!$mysqli->query($query)) {
                 echo "Error al guarda el cliente: " . $mysqli->error;
+            }else {
+                $result = $mysqli->query("SELECT @msg as m");
+                $salida = $result->fetch_assoc();
+                $msg = $salida['m'];
+    
+                if ($msg == 1) {
+                    echo $msg;
+                } else if ($msg == 0) {
+                    echo $msg;
+                }
             }
             $mysqli->query("commit");
         }
@@ -34,6 +44,16 @@ switch ($op) {
             $query = "CALL up_cliente($id, '$nom', '$ape', '$ser', '$tip', @msg)";
             if (!$mysqli->query($query)) {
                 echo "Error al actualizar el cliente: " . $mysqli->error;
+            }else {
+                $result = $mysqli->query("SELECT @msg as m");
+                $salida = $result->fetch_assoc();
+                $msg = $salida['m'];
+    
+                if ($msg == 1) {
+                    echo $msg;
+                } else if ($msg == 0) {
+                    echo $msg;
+                }
             }
             $mysqli->query("commit");
         }

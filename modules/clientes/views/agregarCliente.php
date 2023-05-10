@@ -24,53 +24,26 @@ include '../../include/views/head.php';
                                 <div class="card-content">
                                     <form method="POST" enctype="multipart/form-data" action="../controller/?op=1">
                                         <div class="row">
-                                            <div class="input-field col s4">
+                                            <div class="input-field col s6">
                                                 <input name="nom" id="nom" type="text" class="validate" required>
                                                 <label for="nom" class="black-text">Nombres:<span class="red-text">*</span></label>
                                             </div>
-                                            <div class="input-field col s4">
+                                            <div class="input-field col s6">
                                                 <input name="ape" id="ape" type="text" class="validate" required>
                                                 <label for="ape" class="black-text">Apellidos:<span class="red-text">*</span></label>
                                             </div>
-                                            <div class="input-field col s4">
-                                                <input name="dpi" id="dpi" type="number" class="required" onblur="validarDPIcliente()">
-                                                <label for="dpi" class="black-text">NIT o DPI</label>
-                                            </div>
                                         </div>
                                         <div class="row">
-                                            <div class="input-field col s4">
-                                                <input name="dir" id="dir" type="text" class="validate">
-                                                <label for="dir" class="black-text">Dirección:</label>
+                                            <div class="input-field col s6">
+                                                <input name="ser" id="ser" type="text" class="validate">
+                                                <label for="ser" class="black-text">Servicio:</label>
                                             </div>
-                                            <div class="input-field col s4">
-                                                <input name="cel" id="cel" type="number" class="validate">
-                                                <label for="cel" class="black-text">Teléfono:</label>
-                                            </div>
-                                            <div class="input-field col s4">
-                                                <input name="em" id="em" type="email" class="validate">
-                                                <label for="em" class="black-text">Correo electrónico:</label>
+                                            <div class="input-field col s6">
+                                                <input name="tip" id="tip" type="text" class="validate">
+                                                <label for="tip" class="black-text">Tipo:</label>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="file-field input-field col s6">
-                                                <div class="btn blue darken-4">
-                                                    <span><i class="material-icons center white-text">assignment</i></span>
-                                                    <input title="Foto recibo de luz o patente" name="fore" id="fore" type="file">
-                                                </div>
-                                                <div class="file-path-wrapper">
-                                                    <input title="Foto recibo de luz o patente" placeholder="Foto recibo de servicios o patente" class="file-path validate" type="text">
-                                                </div>
-                                            </div>
-                                            <div class="file-field input-field col s6">
-                                                <div class="btn blue darken-4">
-                                                    <span><i class="material-icons center white-text">contacts</i></span>
-                                                    <input title="Foto DPI" name="fodpi" id="fodpi" type="file">
-                                                </div>
-                                                <div class="file-path-wrapper">
-                                                    <input title="Foto DPI" placeholder="Foto DPI" class="file-path validate" type="text">
-                                                </div>
-                                            </div>
-                                        </div>
+
                                         <div class="row">
                                             <div class="input-field center-align">
                                                 <button class="col s6 modal-close waves-effect waves-light btn-small indigo darken-3 negrita" id="enviar"><i class="material-icons right">save</i>Guardar</button>
@@ -109,50 +82,51 @@ include '../../include/views/head.php';
 
     <script>
         $(document).ready(function() {
-            // $('form').submit(function(ev) {
-            //     $(this).unbind('submit').submit()
-            // });
-            // function(evt) {return true;}
-            $('form').submit(function(evt) {
-                $(this).unbind('submit').submit()
+            $('#enviar').click(function() {
+                let cliente = {};
+                
+                let nom = document.getElementById("nom").value;
+                let ape = document.getElementById("ape").value;
+                let ser = document.getElementById("ser").value;
+                let tip = document.getElementById("tip").value;
+
+                cliente = {
+                    nom,
+                    ape,
+                    ser,
+                    tip
+                };
+
+
+                if (!cliente?.nom?.length) {
+                    alert("El nombre está vacío: ");
+                } else if (!cliente?.ape?.length) {
+                    alert("El apellido está vacío");
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "../controller/?op=1",
+                        data: {
+                            cliente: JSON.stringify(cliente)
+                        },
+                    }).done(function(result) {
+                        if (result != 1) {
+                            alert(result);
+                        } else if (result == 1) {
+                            alert('El cliente fue guardado correctamente');
+                            location.href = "verClientes.php";
+                        }
+                    }).fail(function(error) {
+                        alert("Error Petición POST: " + error);
+                    });
+                }
             });
-        })
+        });
 
-        function validarDPIcliente() {
-            let dpi = document.getElementById('dpi').value
-            if (dpi.length) {
-                $.ajax({
-                    type: "GET",
-                    url: `../controller/?op=buscarCliente&dpi=${dpi}`,   
-                }).done(function(result) {
 
-                    let cliente = JSON.parse(result);
-                    if (cliente?.dpi?.length) {
-                        alert(`Ya existe un cliente con NIT o DPI: ${cliente.dpi} y nombre: ${cliente.nombre}`);
-                        $("#enviar").prop('disabled', true);
-                        $("#nom").prop('disabled', true);
-                        $("#ape").prop('disabled', true);
-                        $("#dir").prop('disabled', true);
-                        $("#cel").prop('disabled', true);
-                        $("#em").prop('disabled', true);
-                        $("#fore").prop('disabled', true);
-                        $("#fodpi").prop('disabled', true);                        
-                    } else {
-                        alert(`El cliente con DPI: ${dpi} es válido.`);
-                        $("#enviar").prop('disabled', false);
-                        $("#nom").prop('disabled', false);
-                        $("#ape").prop('disabled', false);
-                        $("#dir").prop('disabled', false);
-                        $("#cel").prop('disabled', false);
-                        $("#em").prop('disabled', false);
-                        $("#fore").prop('disabled', false);
-                        $("#fodpi").prop('disabled', false);                        
-                    }
-                }).fail(function(error) {
-                    alert("Error Petición GET: " + error);
-                });
-            }
-        }
+        $("form").submit(function(e) {
+            e.preventDefault();
+        });
     </script>
 </body>
 
